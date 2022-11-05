@@ -2,37 +2,52 @@ import cv2
 # https://inhovation97.tistory.com/56
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
+from tqdm import tqdm
 
 #load image
-image = cv2.imread('image01.jpg')
+image = cv2.imread('image01_small.jpg')
 image = image[:,:,::-1] # BGR -> RGB
-width = len(image[0,:,0]) #850
-height = len(image[:,0,0]) #1202
+width = len(image[0,:,0]) 
+height = len(image[:,0,0]) 
 
 #load pre-defined patch
 for i in range(3):
 
-    #load the image.
-    globals()["patch{}".format(i + 1)] = cv2.imread('patch' + str(i + 1) + '.png')[:,:,::-1] # BGR -> RGB
+    #load the patch image.
+    globals()["patch{}".format(i + 1)] = cv2.imread('patch' + str(i + 1) + '_small.jpg')[:,:,::-1] # BGR -> RGB
 
     #inverse the patch.
     globals()["patch_inversed{}".format(i + 1)] = globals()["patch{}".format(i + 1)][:,::-1,:] # BGR -> RGB, x inversed
 
+    #normalize the patch.
+    globals()["patch_inversed{}".format(i + 1)] = globals()["patch_inversed{}".format(i + 1)].astype('float64') - 128
+
     #define convolution map.
-    globals()["convolution_map{}".format(i + 1)] = [[0 for col in range(width + len(globals()["patch{}".format(i + 1)][0,:,0]))] for row in range(height+len(globals()['patch' + str(i + 1)][:,0,0]))]
+    globals()["convolution_map{}".format(i + 1)] = image.copy()
+
+    #change datatype to prevent overflow.
+    globals()["convolution_map{}".format(i + 1)] = globals()["convolution_map{}".format(i + 1)].astype('float64')
 
 #do convolution.
 for p in range(3):
-    patch_width = len(globals()['patch' + str(p + 1)][0,:,0]) # 280
-    patch_height = len(globals()['patch' + str(p + 1)][:,0,0])# 280
+    patch_width = len(globals()['patch' + str(p + 1)][0,:,0]) 
+    patch_height = len(globals()['patch' + str(p + 1)][:,0,0])
 
     #https://stackoverflow.com/questions/43391205/add-padding-to-images-to-get-them-into-the-same-shape
     #do padding for patch size.
-    globals()["image{}".format(p + 1)] = cv2.copyMakeBorder(src = image.copy(), top = 10, bottom = 10, left = 10, right = 10, borderType = cv2.BORDER_CONSTANT, value= [0, 0, 0])
-    # for img_y in range(height):
-    #     for img_x in range(width):
-    #         for patch_y in range(patch_height):
-    #             for patch_x in range(patch_width):
+    #normalize by subtracting 128.
+    globals()["image{}".format(p + 1)] = cv2.copyMakeBorder(src = image.copy(), top = int(patch_height/2), bottom = int(patch_height/2), left = int(patch_width/2), right = int(patch_width/2), borderType = cv2.BORDER_CONSTANT, value= [0, 0, 0]).astype('float64') - 128
+
+    #do normalization for patch and the original image.
+
+    #do convolution.
+    for img_y in tqdm(range(height)):
+        for img_x in range(width):
+            for rgb in range(3):
+                globals()["convolution_map" + str(p + 1)][img_y, img_x, rgb] = 0
+                for patch_y in range(patch_height):
+                    for patch_x in range(patch_width):
+                        globals()["convolution_map" + str(p + 1)][img_y, img_x, rgb] +=  globals()["patch_inversed" + str(p + 1)][patch_y, patch_x, rgb].astype('float64') * globals()["image" + str(p + 1)][img_y + patch_y, img_x + patch_x, rgb].astype('float64')
 
 
 #show convolution results.
@@ -59,8 +74,8 @@ ax1.set_xticks([])
 ax1.set_yticks([])
 
 ax2 = plt.subplot(gs[2])
-ax2.imshow(image)
-#ax2.imshow(globals()['image1'])
+#ax2.imshow(image)
+ax2.imshow(globals()['image1'])
 ax2.set_title('convolution')
 ax2.set_xticks([])
 ax2.set_yticks([])
@@ -118,76 +133,3 @@ ax11.set_xticks([])
 ax11.set_yticks([])
 
 plt.show()
-# plt.subplot(3,4,1)
-# plt.imshow(globals()['patch1'])
-# plt.title('patch1')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,2)
-# plt.imshow(image)
-# plt.title('original')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,3)
-# plt.imshow(image)
-# plt.title('convolution - heatmap')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,4)
-# plt.imshow(image)
-# plt.title('results')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,5)
-# plt.imshow(globals()['patch2'])
-# plt.title('patch2')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,6)
-# plt.imshow(image)
-# plt.title('original')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,7)
-# plt.imshow(image)
-# plt.title('convolution - heatmap')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,8)
-# plt.imshow(image)
-# plt.title('results')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,9)
-# plt.imshow(globals()['patch3'])
-# plt.title('patch3')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,10)
-# plt.imshow(image)
-# plt.title('original')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,11)
-# plt.imshow(image)
-# plt.title('convolution - heatmap')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.subplot(3,4,12)
-# plt.imshow(image)
-# plt.title('results')
-# plt.xticks([])
-# plt.yticks([])
-
-# plt.show()
