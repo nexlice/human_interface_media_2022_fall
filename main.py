@@ -1,4 +1,5 @@
 import numpy as np
-
-a = np.array(([[1,2,3],[5,6,7]]))
-print(a-10)
+z = np.arange(36).reshape(3,4,3)
+print(z.shape)
+print(z)
+print(z.sum(axis = 0))

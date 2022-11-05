@@ -23,10 +23,10 @@ for i in range(3):
     globals()["patch_inversed{}".format(i + 1)] = globals()["patch_inversed{}".format(i + 1)].astype('float64') - 128
 
     #define convolution map.
-    globals()["convolution_map{}".format(i + 1)] = image.copy()
+    globals()["convolution_map_rgb{}".format(i + 1)] = image.copy()
 
     #change datatype to prevent overflow.
-    globals()["convolution_map{}".format(i + 1)] = globals()["convolution_map{}".format(i + 1)].astype('float64')
+    globals()["convolution_map_rgb{}".format(i + 1)] = globals()["convolution_map_rgb{}".format(i + 1)].astype('float64')
 
 #do convolution.
 for p in range(3):
@@ -44,14 +44,13 @@ for p in range(3):
     for img_y in tqdm(range(height)):
         for img_x in range(width):
             for rgb in range(3):
-                globals()["convolution_map" + str(p + 1)][img_y, img_x, rgb] = 0
+                globals()["convolution_map_rgb" + str(p + 1)][img_y, img_x, rgb] = 0
                 for patch_y in range(patch_height):
                     for patch_x in range(patch_width):
-                        globals()["convolution_map" + str(p + 1)][img_y, img_x, rgb] +=  globals()["patch_inversed" + str(p + 1)][patch_y, patch_x, rgb].astype('float64') * globals()["image" + str(p + 1)][img_y + patch_y, img_x + patch_x, rgb].astype('float64')
+                        globals()["convolution_map_rgb" + str(p + 1)][img_y, img_x, rgb] +=  globals()["patch_inversed" + str(p + 1)][patch_y, patch_x, rgb].astype('float64') * globals()["image" + str(p + 1)][img_y + patch_y, img_x + patch_x, rgb].astype('float64')
 
-
-#show convolution results.
-
+    #sum the convolution values.                    
+    globals()["convolution_map{}".format(p + 1)] = globals()["convolution_map_rgb" + str(p + 1)][img_y, img_x, rgb].sum(axis = 0)
 
 #find the bounding box
 
@@ -73,9 +72,11 @@ ax1.set_title('patch1')
 ax1.set_xticks([])
 ax1.set_yticks([])
 
+#show convolution results.
 ax2 = plt.subplot(gs[2])
 #ax2.imshow(image)
-ax2.imshow(globals()['image1'])
+plt.pcolor()
+ax2.imshow(globals()["convolution_map1"], cmap="seismic", interpolation= 'bilinear')
 ax2.set_title('convolution')
 ax2.set_xticks([])
 ax2.set_yticks([])
@@ -94,13 +95,13 @@ ax4.set_xticks([])
 ax4.set_yticks([])
 
 ax5 = plt.subplot(gs[5])
-ax5.imshow(globals()['patch_inversed2'])
+ax5.imshow(globals()['patch2'])
 ax5.set_title('patch2')
 ax5.set_xticks([])
 ax5.set_yticks([])
 
 ax6 = plt.subplot(gs[6])
-ax6.imshow(image)
+ax2.imshow(globals()["convolution_map2"], cmap="seismic", interpolation= 'bilinear')
 ax6.set_xticks([])
 ax6.set_yticks([])
 
@@ -123,7 +124,7 @@ ax9.set_xticks([])
 ax9.set_yticks([])
 
 ax10 = plt.subplot(gs[10])
-ax10.imshow(image)
+ax2.imshow(globals()["convolution_map3"], cmap="seismic", interpolation= 'bilinear')
 ax10.set_xticks([])
 ax10.set_yticks([])
 
