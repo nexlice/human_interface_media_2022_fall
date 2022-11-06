@@ -15,11 +15,14 @@ def show_output(patch, image, output, threshhold):
 
     #show output results.
     ax1 = plt.subplot(gs[1])
-    ax1.imshow(output, cmap="rainbow", interpolation= 'bilinear')
+    im = ax1.imshow(output, cmap="rainbow", interpolation= 'bilinear')
     ax1.set_title('cross correlation')
     ax1.set_xticks([])
     ax1.set_yticks([])
 
+    #make colorbar
+    cb = fig.colorbar(im, ax = ax1, shrink = 0.7)
+    
     #find the bounding box
     ax2 = plt.subplot(gs[2])
     output_normalized = output + output.min()
