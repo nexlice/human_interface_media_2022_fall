@@ -9,7 +9,7 @@ def pad_image():
     #     mode = 'constant', 
     #     constant_values = 0
     # )
-    ...
+    pass
 
 def correlation(image, patch):
     """Apply correlation filtering to image
