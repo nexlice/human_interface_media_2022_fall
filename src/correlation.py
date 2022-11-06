@@ -20,8 +20,8 @@ def correlation(image, patch):
     Return:
         (np.ndarray): 2D output of correlation filtering
     """
-    image = image.copy()
-    patch = patch.copy()
+    image_tmp = image.copy()
+    patch_tmp = patch.copy()
 
     # 2. compute correlation
     # output[h, w] = np.sum(image[h:h+patch_height, w:w+patch_width] * patch)
@@ -37,7 +37,7 @@ def correlation(image, patch):
 
     for h in range(image_height - patch_height + 1):
         for w in range(image_width - patch_width + 1):
-            output[h, w] = np.sum(image[h : h + patch_height, w : w + patch_width] * patch)
+            output[h, w] = np.sum(image_tmp[h : h + patch_height, w : w + patch_width] * patch_tmp)
 
     return output
 
