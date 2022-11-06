@@ -29,7 +29,7 @@ for i in range(3):
     #change datatype to prevent overflow.
     globals()["convolution_map_rgb{}".format(i + 1)] = globals()["convolution_map_rgb{}".format(i + 1)].astype('float64')
 
-#do convolution.
+#compute correlation
 for p in range(3):
     patch_width = len(globals()['patch' + str(p + 1)][0,:,0]) 
     patch_height = len(globals()['patch' + str(p + 1)][:,0,0])
