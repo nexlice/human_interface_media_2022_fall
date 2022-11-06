@@ -75,7 +75,6 @@ ax1.set_yticks([])
 #show convolution results.
 ax2 = plt.subplot(gs[2])
 #ax2.imshow(image)
-plt.pcolor()
 ax2.imshow(globals()["convolution_map1"], cmap="seismic", interpolation= 'bilinear')
 ax2.set_title('convolution')
 ax2.set_xticks([])
