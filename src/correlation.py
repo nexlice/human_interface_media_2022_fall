@@ -1,5 +1,4 @@
 import numpy as np
-import tqdm as tqdm
 
 def pad_image():
     # https://stackoverflow.com/questions/43391205/add-padding-to-images-to-get-them-into-the-same-shape
@@ -36,7 +35,7 @@ def correlation(image, patch):
         dtype='float64'
     )
 
-    for h in tqdm(range(image_height - patch_height + 1)):
+    for h in range(image_height - patch_height + 1):
         for w in range(image_width - patch_width + 1):
             output[h, w] = np.sum(image[h : h + patch_height, w : w + patch_width] * patch)
 
