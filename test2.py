@@ -6,7 +6,7 @@ from tqdm import tqdm
 import matplotlib.patches as patches
 
 #load image
-image = cv2.imread('image01_small2.jpg')
+image = cv2.imread('image18_small.jpg')
 image = image[:,:,::-1] # BGR -> RGB
 width = len(image[0,:,0]) 
 height = len(image[:,0,0]) 
@@ -15,7 +15,7 @@ height = len(image[:,0,0])
 for i in range(3):
 
     #load the patch image.
-    globals()["patch{}".format(i + 1)] = cv2.imread('patch' + str(i + 1) + '_small2.jpg')[:,:,::-1] # BGR -> RGB
+    globals()["patch{}".format(i + 1)] = cv2.imread('patch18' + str(i + 1) + '.jpg')[:,:,::-1] # BGR -> RGB
 
     #inverse the patch.
     globals()["patch_inversed{}".format(i + 1)] = globals()["patch{}".format(i + 1)][:,::-1,:] # BGR -> RGB, x inversed
