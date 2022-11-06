@@ -24,12 +24,13 @@ def show_output(patch, image, output, threshhold):
     ax2 = plt.subplot(gs[2])
     output_normalized = output + output.min()
     output_normalized /= output_normalized.max()
+    image_tmp = image.copy()
 
     for i in range (output_normalized.shape[0]):
         for j in range (output_normalized.shape[1]):
             if output_normalized[i,j] >= threshhold:
-                image = cv2.rectangle(image, (j, i), (j + patch.shape[0], i + patch.shape[1]), color = (0, 0, 255), thickness = 2)
-    image_RGB = image[:,:,::-1] # BGR -> RGB
+                image_tmp = cv2.rectangle(image, (j, i), (j + patch.shape[1], i + patch.shape[0]), color = (0, 0, 255), thickness = 2)
+    image_RGB = image_tmp[:,:,::-1] # BGR -> RGB
     ax2.imshow(image_RGB)
     ax2.set_title('results')
     ax2.set_xticks([])
