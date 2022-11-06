@@ -1,4 +1,5 @@
 import numpy as np
+import tqdm as tqdm
 
 def pad_image():
     # https://stackoverflow.com/questions/43391205/add-padding-to-images-to-get-them-into-the-same-shape
@@ -23,14 +24,6 @@ def correlation(image, patch):
     image = image.copy()
     patch = patch.copy()
 
-    # Convert image type type
-    image = image.astype('float64')
-    patch = patch.astype('float64')
-    
-    # do normalization for image and the patch (in-place operation)
-    image -= 128
-    patch -= 128
-
     # 2. compute correlation
     # output[h, w] = np.sum(image[h:h+patch_height, w:w+patch_width] * patch)
     image_height, image_width = image.shape
@@ -43,8 +36,24 @@ def correlation(image, patch):
         dtype='float64'
     )
 
-    for h in range(image_height - patch_height + 1):
+    for h in tqdm(range(image_height - patch_height + 1)):
         for w in range(image_width - patch_width + 1):
             output[h, w] = np.sum(image[h : h + patch_height, w : w + patch_width] * patch)
 
     return output
+
+
+def three_channel_correlation(image, patch):
+    """Apply correlation filtering to color image with color filter
+
+    Args:
+        image(np.ndarray): 3D signal of shape (height, width, color=3)
+        patch(np.ndarray): 3D filter of shape (height, width, color=3)
+    
+    Return:
+        (np.ndarray): 2D output of correlation filtering
+    """
+    assert image.shape[-1] == 3, "Last axis should be color axis"
+    # -1 은 마지막 인덱스..
+    outputs = [correlation(image[:, :, color], patch[:, :, color]) for color in range(image.shape[-1])]
+    return outputs[0] + outputs[1] + outputs[2]
