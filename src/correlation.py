@@ -56,3 +56,19 @@ def three_channel_correlation(image, patch):
     # -1 은 마지막 인덱스..
     outputs = [correlation(image[:, :, color], patch[:, :, color]) for color in range(image.shape[-1])]
     return outputs[0] + outputs[1] + outputs[2]
+
+
+def convolution_patch(image):
+    """Change the x axis to reverse of color image
+
+    Args:
+        patch(np.ndarray): 3D filter of shape (height, width, color=3)
+    
+    Return:
+        (np.ndarray): 3D output of correlation filtering
+    """
+    image_tmp = image.copy()
+    # Convert image type type
+    # do normalization by dividing by whole image 
+    image_tmp = image_tmp[:,::-1,:]
+    return image_tmp
