@@ -22,3 +22,9 @@ def normalize_reverse(image):
     # do normalization by dividing by whole image 
     image_tmp = 255 - image_tmp
     return image_tmp
+
+def normalize_0to1(image):
+    image_tmp = image.copy()
+    output_normalized = image_tmp + image_tmp.min()
+    output_normalized /= output_normalized.max()
+    return output_normalized

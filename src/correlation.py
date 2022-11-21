@@ -23,7 +23,7 @@ def correlation(image, patch):
     image_tmp = image.copy()
     patch_tmp = patch.copy()
 
-    # 2. compute correlation
+    # compute correlation
     # output[h, w] = np.sum(image[h:h+patch_height, w:w+patch_width] * patch)
     image_height, image_width = image.shape
     patch_height, patch_width = patch.shape
@@ -34,7 +34,6 @@ def correlation(image, patch):
         ), 
         dtype='float64'
     )
-
     for h in range(image_height - patch_height + 1):
         for w in range(image_width - patch_width + 1):
             output[h, w] = np.sum(image_tmp[h : h + patch_height, w : w + patch_width] * patch_tmp)

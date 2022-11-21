@@ -25,13 +25,12 @@ def show_output(patch, image, output, threshhold):
     
     #find the bounding box
     ax2 = plt.subplot(gs[2])
-    output_normalized = output + output.min()
-    output_normalized /= output_normalized.max()
+
     image_tmp = image.copy()
 
-    for i in range (output_normalized.shape[0]):
-        for j in range (output_normalized.shape[1]):
-            if output_normalized[i,j] >= threshhold:
+    for i in range (output.shape[0]):
+        for j in range (output.shape[1]):
+            if output[i,j] >= threshhold:
                 image_tmp = cv2.rectangle(image_tmp, (j, i), (j + patch.shape[1], i + patch.shape[0]), color = (0, 0, 255), thickness = 2)
 
     image_RGB = image_tmp[:,:,::-1] # BGR -> RGB
