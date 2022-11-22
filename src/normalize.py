@@ -1,3 +1,10 @@
+def no_normalization(image):
+    image_tmp = image.copy()
+    # Convert image type type
+    image_tmp = image_tmp.astype('float64')
+    # do normalization for image and the patch (in-place operation)
+    return image_tmp
+
 def normalize_subtraction(image):
     image_tmp = image.copy()
     # Convert image type type

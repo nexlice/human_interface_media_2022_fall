@@ -1,15 +1,5 @@
 import numpy as np
 
-def pad_image():
-    # https://stackoverflow.com/questions/43391205/add-padding-to-images-to-get-them-into-the-same-shape
-    # image = np.pad(
-    #     image, 
-    #     (patch_height//2, patch_height//2, patch_width//2, patch_width//2), 
-    #     mode = 'constant', 
-    #     constant_values = 0
-    # )
-    pass
-
 def correlation(image, patch):
     """Apply correlation filtering to image
 
